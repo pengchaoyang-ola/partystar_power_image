@@ -1,34 +1,34 @@
 # PowerImage
 
-A powerful plugin that fully uses the native image library's ability to display images on the flutter side.
+一个充分利用原生图片库能力、高扩展性的flutter图片库。
 
-[中文文档](https://github.com/alibaba/power_image/blob/main/README_CN.md)
+[English document](https://github.com/alibaba/power_image/blob/main/README.md)
 
-**Features:**
+**特点：**
 
-- Supports the ability to load ui.Image. In the solution based on external texture, the user could not get the real ui.Image to use, which made the image library powerless in this special usage scenario.
+- 支持加载 ui.Image 能力。在基于外接纹理的方案中，使用方无法拿到真正的 ui.Image 去使用，这导致图片库在这种特殊的使用场景下无能为力。
 
-- Support image preloading capability. Just like flutter precacheImage. This is very useful in some scenarios that require high image display speed.
+- 支持图片预加载能力。正如原生precacheImage一样。这在某些对图片展示速度要求较高的场景下非常有用。
 
-- Added texture cache to connect with flutter's imageCache! Unified image cache to avoid memory problems caused by mixing native images.
+- 新增纹理缓存，与原生图片库缓存打通！统一图片缓存，避免原生图片混用带来的内存问题。
 
-- Emulators are supported. Before flutter-1.23.0-18.1.pre, the emulator could not display Texture Widget.
+- 支持模拟器。在 flutter-1.23.0-18.1.pre之前的版本，模拟器无法展示 Texture Widget。
 
-- Improve the custom image type channel. Solve the demand for business custom image acquisition.
+- 完善自定义图片类型通道。解决业务自定义图片获取诉求。
 
-- Perfect exception capture and collection.
+- 完善的异常捕获与收集。
 
-- Support animation. (PR from LiteTao)
+- 支持动图。（来自淘特的 PR）
 
+# 使用
 
-# Usage
+## 安装
 
-## Installation
+- power_image：推荐使用最新版本，[power_image pub versions](https://pub.dev/packages/power_image/versions)
+- power_image_ext：你需要根据你使用的flutter版本来选择版本，[power_image_ext pub versions](https://pub.dev/packages/power_image_ext/versions)
 
-- power_image：It is recommended to use the latest version, [power_image pub versions](https://pub.dev/packages/power_image/versions)
-- power_image_ext：You need to choose the version based on the flutter version you are using.  Go to [power_image_ext](https://github.com/alibaba/power_image_ext) for details！[power_image_ext pub versions](https://pub.dev/packages/power_image_ext/versions)
+将下方配置加入到 `pubspec.yaml` 文件中:
 
-Add the following to your `pubspec.yaml` file:
 ```yaml
 dependencies:
   power_image: 0.1.0-pre.2
@@ -37,7 +37,7 @@ dependency_overrides:
   power_image_ext: 2.5.3
 ```
 
-or use code in github directly:
+或者直接引用 GitHub 源码：
 
 ```yaml
 dependencies:
@@ -45,7 +45,7 @@ dependencies:
     git:
       url: 'git@github.com:alibaba/power_image.git'
       ref: '0.1.0-pre.2'
-      
+
 dependency_overrides:
   power_image_ext:
     git:
@@ -53,16 +53,19 @@ dependency_overrides:
       ref: '2.5.3'
 ```
 
-## Setup
+## 初始化
 
 ### Flutter
-#### 1. Replace `ImageCache` with `ImageCacheExt`.
+
+#### 1. 用 `ImageCacheExt`替换 `ImageCache` .
 
 ```dart
 /// call before runApp()
 PowerImageBinding();
 ```
+
 or
+
 ```dart
 /// return ImageCacheExt in createImageCache(), 
 /// if you have extends with WidgetsFlutterBinding
@@ -76,9 +79,12 @@ class XXX extends WidgetsFlutterBinding {
 
 
 
-#### 2. Setup PowerImageLoader
-Initialize and set the global default rendering mode, renderingTypeTexture is texture mode, renderingTypeExternal is ffi mode
-In addition, there are exception reports in PowerImageSetupOptions, and the sampling rate of exception reports can be set.
+#### 2. 初始化 PowerImageLoader
+
+初始化并设置全局的默认的渲染方式，renderingTypeTexture为texture方式，renderingTypeExternal为ffi方式
+
+另外`PowerImageSetupOptions`里面也有异常上报，以及异常上报采样率。
+
 ```dart
     PowerImageLoader.instance.setup(PowerImageSetupOptions(renderingTypeTexture,
         errorCallbackSamplingRate: 1.0,
@@ -91,7 +97,7 @@ In addition, there are exception reports in PowerImageSetupOptions, and the samp
 
 ### iOS
 
-PowerImage provides basic image types, including network, file, nativeAsset, and flutter assets. Users need to customize their corresponding loaders.
+PowerImage 提供了基础的图片类型，包括网络图（network）、文件（file）、native 资源（nativeAsset）、flutter 资源（asset），使用方需要自定义对应的加载器。
 
 #### OC
 
@@ -112,7 +118,7 @@ PowerImage provides basic image types, including network, file, nativeAsset, and
 ```
 
 
-The loader needs to follow the PowerImageLoaderProtocol protocol:
+loader 需要遵循 PowerImageLoaderProtocol 协议：
 
 ```objectivec
 typedef void(^PowerImageLoaderCompletionBlock)(BOOL success, PowerImageResult *imageResult);
@@ -151,7 +157,6 @@ Network image loader example:
 
 }
 ```
-
 #### Swift
 
 ```swift
@@ -186,7 +191,9 @@ func handleRequest(_ requestConfig: PowerImageRequestConfig!, completed complete
 ```
 
 native asset loader example:
+
 #### OC
+
 ```objectivec
 - (void)handleRequest:(PowerImageRequestConfig *)requestConfig completed:(PowerImageLoaderCompletionBlock)completedBlock {
     UIImage *image = [UIImage imageNamed:requestConfig.srcString];
@@ -198,6 +205,7 @@ native asset loader example:
 }
 ```
 #### Swift
+
 ```swift
 
 func handleRequest(_ requestConfig: PowerImageRequestConfig!, completed completedBlock: PowerImageLoaderCompletionBlock!) {
@@ -257,7 +265,6 @@ flutter asset loader example:
 }
 
 ```
-
 #### Swift
 
 ```swift
@@ -305,7 +312,9 @@ func handleRequest(_ requestConfig: PowerImageRequestConfig!, completed complete
 ```
 
 file loader example:
+
 #### OC
+
 ```objectivec
 - (void)handleRequest:(PowerImageRequestConfig *)requestConfig completed:(PowerImageLoaderCompletionBlock)completedBlock {
     
@@ -338,7 +347,8 @@ func handleRequest(_ requestConfig: PowerImageRequestConfig!, completed complete
 
 
 ### Android
-PowerImage provides basic image types, including network, file, nativeAsset, and flutter assets. Users need to customize their corresponding loaders.
+
+PowerImage 提供了基础的图片类型，包括网络图（network）、文件（file）、native 资源（nativeAsset）、flutter 资源（asset），使用方需要自定义对应的加载器。
 
 #### Java
 
@@ -370,14 +380,13 @@ PowerImageLoader.getInstance().registerImageLoader(
 )
 ```
 
-The loader needs to follow the PowerImageLoaderProtocol protocol:
+loader 需要遵循 PowerImageLoaderProtocol 协议：
 
 ```java
 public interface PowerImageLoaderProtocol {
     void handleRequest(PowerImageRequestConfig request, PowerImageResult result);
 }
 ```
-
 
 Network image loader example:
 
@@ -626,59 +635,6 @@ public class PowerImageFlutterAssetLoader implements PowerImageLoaderProtocol {
 }
 ```
 
-#### Kotlin
-
-```kotlin
-class PowerImageFlutterAssetLoader(private val context: Context) : PowerImageLoaderProtocol {
-    override fun handleRequest(request: PowerImageRequestConfig, response: PowerImageResponse) {
-        val name = request.srcString()
-        if (name == null || name.length <= 0) {
-            response.onResult(PowerImageResult.genFailRet("src 为空"))
-            return
-        }
-        var assetPackage: String? = ""
-        if (request.src != null) {
-            assetPackage = request.src["package"] as String?
-        }
-        val path: String = if (assetPackage != null && assetPackage.length > 0) {
-            FlutterMain.getLookupKeyForAsset(name, assetPackage)
-        } else {
-            FlutterMain.getLookupKeyForAsset(name)
-        }
-        if (path.isEmpty()) {
-            response.onResult(PowerImageResult.genFailRet("path 为空"))
-            return
-        }
-        val asset = Uri.parse("file:///android_asset/$path")
-        Glide.with(context).asBitmap().load(asset).listener(object : RequestListener<Bitmap?> {
-            override fun onLoadFailed(
-                e: GlideException?,
-                model: Any,
-                target: Target<Bitmap?>,
-                isFirstResource: Boolean
-            ): Boolean {
-                response.onResult(PowerImageResult.genFailRet("Native加载失败: " + if (e != null) e.message else "null"))
-                return true
-            }
-
-            override fun onResourceReady(
-                resource: Bitmap?,
-                model: Any,
-                target: Target<Bitmap?>,
-                dataSource: DataSource,
-                isFirstResource: Boolean
-            ): Boolean {
-                response.onResult(PowerImageResult.genSucRet(resource))
-                return true
-            }
-        }).submit(
-            if (request.width <= 0) Target.SIZE_ORIGINAL else request.width,
-            if (request.height <= 0) Target.SIZE_ORIGINAL else request.height
-        )
-    }
-}
-```
-
 file loader example:
 
 #### Java
@@ -759,8 +715,11 @@ class PowerImageFileLoader(private val context: Context) : PowerImageLoaderProto
 ```
 
 
+
 ## API
+
 network image:
+
 ```dart
   PowerImage.network(
     String src, {
@@ -836,15 +795,15 @@ File:
       double imageHeight})
 ```
 
-Custom Image Type:
+自定义来源图片:
 
-1.Define custom ImageType like "album".
+1.自定义 imageType，比如 “album”。
 
-2.Define custom PowerImageRequestOptionsSrc to  pass argument to Native loader.
+2.自定义 src（PowerImageRequestOptionsSrc），里面放需要传递给native的自定义参数。
 
-3.Register custom loader in Android and iOS for "album" to receive argument and return Bitmap or UIImage.
+3.Native侧自定义Loader，接收Flutter侧传递的参数，然后返回一个Bitmap或UIImage，并注册该Loader。
 
-4.Flutter Side will display Image successfully.
+4.Flutter侧就可以展示自定义的图片了。
 
 ```dart
   /// 自定义 imageType\src
@@ -985,7 +944,8 @@ public class PowerImageAlbumLoader implements PowerImageLoaderProtocol {
 }
 ```
 
-# Example
+
+# 例子
 
 Network
 
@@ -999,13 +959,13 @@ Network
 
 
 
-# Best practice
+# 最佳实践
 
-[Best practice](BESTPRACTICE.md)
+[最佳实践](BESTPRACTICE.md)
 
 
 
-# How it works
+# 原理
 
 https://mp.weixin.qq.com/s/TdTGK21S-Yd3aD-yZDoYyQ
 
