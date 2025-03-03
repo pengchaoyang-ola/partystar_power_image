@@ -38,7 +38,7 @@ abstract class PowerImageProvider extends ImageProviderExt<PowerImageProvider> {
   double scale;
 
   @override
-  ImageStreamCompleter load(PowerImageProvider key, DecoderCallback? decode) {
+  ImageStreamCompleter loadImage(PowerImageProvider key, ImageDecoderCallback decode) {
     _completer = OneFrameImageStreamCompleter(_loadAsync(key, decode));
     return _completer!;
   }
@@ -46,7 +46,7 @@ abstract class PowerImageProvider extends ImageProviderExt<PowerImageProvider> {
   ImageStreamCompleter? _completer;
 
   Future<ImageInfo> _loadAsync(
-      PowerImageProvider key, DecoderCallback? decode) async {
+      PowerImageProvider key, ImageDecoderCallback decode) async {
     try {
       PowerImageCompleter powerImageCompleter =
           PowerImageLoader.instance.loadImage(options);
@@ -59,7 +59,7 @@ abstract class PowerImageProvider extends ImageProviderExt<PowerImageProvider> {
         _completer!
           .addOnLastListenerRemovedCallback(() {
             scheduleMicrotask(() {
-              PaintingBinding.instance!.imageCache!.evict(key);
+              PaintingBinding.instance.imageCache.evict(key);
             });
           });
       }
@@ -80,7 +80,7 @@ abstract class PowerImageProvider extends ImageProviderExt<PowerImageProvider> {
       // have had a chance to track the key in the cache at all.
       // Schedule a microtask to give the cache a chance to add the key.
       scheduleMicrotask(() {
-        PaintingBinding.instance!.imageCache!.evict(key);
+        PaintingBinding.instance.imageCache.evict(key);
       });
       rethrow;
     } finally {

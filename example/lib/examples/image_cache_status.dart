@@ -24,7 +24,7 @@ class _ImageCacheStatusWidgetState extends State<ImageCacheStatusWidget> {
 
   @override
   Widget build(BuildContext context) {
-    int sizeBytes = imageCache!.currentSizeBytes;
+    int sizeBytes = imageCache.currentSizeBytes;
     String sizeStr;
     if (sizeBytes >= 1 << 20) {
       sizeStr = '${(sizeBytes / (1 << 20)).toStringAsFixed(2)} MiB';
@@ -42,15 +42,15 @@ class _ImageCacheStatusWidgetState extends State<ImageCacheStatusWidget> {
           RichText(
               textAlign: TextAlign.center,
               text: TextSpan(style: const TextStyle(fontSize: 12), children: [
-                TextSpan(text: '_cache.length: ${imageCache!.currentSize}\n'),
+                TextSpan(text: '_cache.length: ${imageCache.currentSize}\n'),
                 TextSpan(text: 'sizeBytes: $sizeStr\n'),
                 TextSpan(
-                    text: 'liveImageCount: ${imageCache!.liveImageCount}\n'),
+                    text: 'liveImageCount: ${imageCache.liveImageCount}\n'),
                 TextSpan(
-                    text: 'pendingImageCount: ${imageCache!.pendingImageCount}')
+                    text: 'pendingImageCount: ${imageCache.pendingImageCount}')
               ])),
           GestureDetector(
-            onTap: () => imageCache!.clear(),
+            onTap: () => imageCache.clear(),
             child: const Icon(
               Icons.delete,
               color: Colors.white,
