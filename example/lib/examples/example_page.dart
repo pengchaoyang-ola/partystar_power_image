@@ -19,7 +19,7 @@ class _ExamplePageState extends State<ExamplePage> {
   @override
   void initState() {
     super.initState();
-    imageCache!.maximumSizeBytes = 30 << 20;
+    imageCache.maximumSizeBytes = 30 << 20;
     // //file
     // ExampleTool.getLocalImages(widget.renderingType).then((value){
     //     testOptions = value;

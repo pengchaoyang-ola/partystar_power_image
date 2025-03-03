@@ -19,7 +19,7 @@ void main() {
 
     PowerImageBinding();
     PowerImageLoader.instance.setup(PowerImageSetupOptions(renderingTypeTexture,
-        errorCallbackSamplingRate: null,
+        errorCallbackSamplingRate: 1.0,
         errorCallback: (PowerImageLoadException exception) {}));
     runApp(const MyApp());
   }, (error, stackTrace) async {
